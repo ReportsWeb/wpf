@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="1.00" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="ＭＳ ゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="ＭＳ ゴシック" Size="20.25" Bold="True" />
+<FontAttr AttrName="Font3" Name="ＭＳ ゴシック" Size="12" Color="Blue" Italic="True" Bold="True" />
+<LineAttr AttrName="Line1" Width="0.3" />
+<LineAttr AttrName="Line2" Width="0" />
+</PrintAttrs>
+<Paper Size="A4" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="2" GridFit="True" ObjLock="False" DesignScale="100" />
+</PrintSetting>
+<PrintObjects>
+<Square Name="網掛け" X="10" Y="36" Width="190" Height="8" LineAttr="Line2" PaintColor="ffc0ffff" R="0" IntervalY="16" Repeat="16" >
+</Square>
+<Text Name="住所" X="86" Y="30" Width="114" Height="4" Text="ＸＸＸＸＸＸＸＸＸ" Align="Left" FontAttr="Font1" IntervalY="8" Repeat="32" />
+<Circle Name="Circle1" X="40" Y="2" Width="130" Height="18" LineAttr="Line2" PaintColor="ffffe0c0" />
+<Text Name="Field1" X="50" Y="8" Width="110" Height="12" Text="印刷テストプログラム" Align="Center" FontAttr="Font2" />
+<Text Name="郵便番号" X="12" Y="30" Width="20" Height="4" Text="999-9999" Align="Center" FontAttr="Font1" IntervalY="8" Repeat="32" />
+<Text Name="Field3" X="12" Y="22" Width="20" Height="4" Text="郵便番号" BackColor="ffffffc0" Align="Left" FontAttr="Font3" />
+<Line Name="横罫線" StartX="10" StartY="36" EndX="200" EndY="36" LineAttr="Line1" IntervalY="8" Repeat="32" />
+<Text Name="Field4" X="36" Y="22" Width="46" Height="4" Text="市区町村" BackColor="ffffffc0" Align="Left" FontAttr="Font3" />
+<Text Name="Field5" X="86" Y="22" Width="114" Height="4" Text="住所" BackColor="ffffffc0" Align="Left" FontAttr="Font3" />
+<Text Name="市区町村" X="36" Y="30" Width="46" Height="4" Text="ＸＸ県ＸＸ市" Align="Left" FontAttr="Font1" IntervalY="8" Repeat="32" />
+<Text Name="日時" X="178" Y="12" Width="22" Height="6" Text="9999/99/99 99:99:99" Align="Center" FontAttr="Font1" />
+<Text Name="ページ" X="184" Y="6" Width="16" Height="4" Text="Page-999" Align="Left" FontAttr="Font1" />
+</PrintObjects>
+</PrintDefine>

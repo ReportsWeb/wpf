@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="reports-engine" content="DotNet">
+<title>.NETの帳票プレビュー | Reports Web</title>
+<link rel="stylesheet" href="native-previewer.css">
+<style>
+:root{font-family:system-ui,"Yu Gothic UI","Yu Gothic",Meiryo,sans-serif;color:#243348;background:#f3f5f8;color-scheme:light}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:1280px;margin:auto;padding:24px}
+header{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:18px}h1{font-size:24px;margin:0 0 7px}p{margin:0;line-height:1.7}
+.plate{background:#6940a5;color:white;font-weight:750;padding:15px 22px;border-radius:10px;font-size:24px;box-shadow:0 4px 14px #6940a520}.sub{font-size:14px;color:#566273}
+.application{background:white;border:1px solid #dfe4ec;border-radius:14px;padding:18px;display:flex;gap:18px;align-items:end;flex-wrap:wrap}
+label{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:650}select,button,.button{font:inherit;padding:9px 13px;border:1px solid #bec9d7;border-radius:7px;background:white;color:inherit;white-space:nowrap}
+button,.button{cursor:pointer;text-decoration:none}button:hover,.button:hover{background:#f1edf8}button:disabled{cursor:default;opacity:.4}.primary{background:#6940a5;color:white;border-color:#6940a5}.primary:hover{background:#58358e}.application .pdf{margin-left:auto}
+.preview-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-size:14px}.application-note{flex-basis:100%;font-size:13px;color:#566273}.application-error{color:#a42222;background:#fff1f1;padding:10px;border-radius:7px}.application [hidden]{display:none!important}
+.viewer{margin-top:18px;background:white;border:1px solid #dfe4ec;border-radius:12px;overflow:hidden}.toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:12px;border-bottom:1px solid #dfe4ec;font-size:14px}.page-label{font-weight:800;color:#33435a;margin-right:2px}.toolbar .spacer{flex:1}
+#stage{height:clamp(350px,70vh,900px);overflow:auto;background:#e5e9ef;padding:16px}#sheet{width:max-content;min-width:100%;min-height:100%;display:flex}#pageImage{display:block;margin:auto;box-shadow:0 3px 12px #25344d30;align-self:flex-start}
+#status{padding:10px 14px;font-size:13px;min-height:40px;border-top:1px solid #dfe4ec}#status.error{color:#a42222;background:#fff1f1}
+.explanation{margin-top:22px;padding:20px;border-left:4px solid #9270c3;background:#fff;border-radius:4px}.explanation h2{font-size:18px;margin:0 0 8px}.explanation p{font-size:14px}.flow{font-weight:650;color:#6940a5;margin-bottom:8px!important}
+@media(max-width:600px){.wrap{padding:14px}.plate{font-size:21px}h1{font-size:20px}.application{gap:12px}.application label{flex-wrap:wrap}.application .pdf{margin-left:0}#samples{max-width:100%}.toolbar .spacer{display:none}}
+@media print{body{background:white}.wrap{padding:0}header,.application,.toolbar,#status,.explanation{display:none!important}.viewer{margin:0;border:0;overflow:visible}#stage{height:auto;padding:0;background:white;overflow:visible}#sheet{display:block;min-width:0;width:auto;min-height:0}#pageImage{width:100%!important;height:auto!important;box-shadow:none;margin:0}}
+</style>
+</head>
+<body><main class="wrap">
+<header><div class="plate">.NET</div><div><h1>サーバーの.NETで、帳票をつくる。</h1><p class="sub">Reports Web / ASP.NET Core Webデモ<br>WebAssemblyを使わず、サーバー上の.NETエンジンで作成した帳票を、ブラウザーのプレビュアーで表示します。</p></div></header>
+<section class="application" aria-label="サンプル帳票アプリケーション">
+<label>サンプル帳票 <select id="samples" disabled aria-label="サンプル帳票"></select></label>
+<div class="preview-controls"><span>プレビュアー</span><button type="button" class="primary" id="togglePreviewToolbar" aria-controls="nativePreviewer" aria-expanded="false">ツールバーを表示</button></div>
+<p class="application-note">ツールバーを表示すると、PDF表示・印刷・検索などを試せます。非表示にすると、帳票だけをアプリに組み込む使い方を体験できます。</p>
+<p id="applicationError" class="application-note application-error" role="alert" hidden></p>
+</section>
+<section id="nativePreviewer" class="viewer" aria-label="印刷プレビュー"></section>
+<section class="explanation"><h2>.NETの業務アプリへ、完成した帳票エンジンを。</h2><p class="flow">ASP.NET Coreの業務アプリ → .NETエンジン → ブラウザーでプレビュー・必要に応じてPDF出力</p><p>.NETライブラリを直接呼び出して帳票を生成します。Windowsの業務資産を生かす構成にも、ASP.NET CoreのWebアプリにも組み込めます。</p></section>
+</main>
+<script>window.ReportsNativeConfig={label:'.NET',engineHeader:'DotNet',externalChromeControl:true};</script>
+<script src="native-previewer.js"></script>
+<script>
+// このボタンはプレビュアーの外側（サンプルアプリ）から公開APIを呼びます。
+(() => {
+  const previewer = window.ReportsWebNative;
+  const button = document.getElementById('togglePreviewToolbar');
+  const error = document.getElementById('applicationError');
+  const updateButton = () => {
+    const visible = previewer.getState().chrome.toolbar;
+    button.textContent = visible ? 'ツールバーを非表示' : 'ツールバーを表示';
+    button.setAttribute('aria-expanded', String(visible));
+  };
+  button.addEventListener('click', () => {
+    if (previewer.getState().chrome.toolbar) previewer.hideAll();
+    else previewer.showAll();
+  });
+  previewer.subscribe('chrome-changed', updateButton);
+  previewer.subscribe('state-changed', state => {
+    error.textContent = state.error || '';
+    error.hidden = !state.error;
+  });
+  previewer.hideAll(); // 初期画面はプレビューだけ。設定ボタンも表示しません。
+  updateButton();
+})();
+</script>
+</body></html>

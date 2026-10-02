@@ -1,0 +1,9 @@
+<Window x:Class="ReportsWpf.ApiClient.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Reports Web | API・デスクトップ連携" Width="760" Height="420" WindowStartupLocation="CenterScreen">
+ <Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <TextBlock FontSize="24" FontWeight="SemiBold" Text="Web API・デスクトップ連携"/>
+  <TextBlock Grid.Row="1" Margin="0,12" Text="API から自己完結した PREPEJ を受信し、このパソコンの Reports.web .NET で処理します。"/>
+  <ListBox x:Name="Samples" Grid.Row="2" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+  <WrapPanel Grid.Row="3" Margin="0,16,0,0"><Button x:Name="PreviewButton" Padding="10" Click="Preview_Click">受信してプレビュー</Button><Button x:Name="SaveDataButton" IsEnabled="False" Padding="10" Margin="8,0" Click="SaveData_Click">PREPEJ を保存</Button><Button x:Name="SavePdfButton" IsEnabled="False" Padding="10" Click="SavePdf_Click">ローカルで PDF 保存</Button><Button x:Name="ReloadButton" Padding="10" Margin="8,0" Click="LoadSamples">一覧を再読込</Button></WrapPanel>
+  <TextBlock x:Name="Status" Grid.Row="4" Margin="0,10,0,0" TextWrapping="Wrap"/>
+ </Grid>
+</Window>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="6.4.2" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="ＭＳ ゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="ＭＳ ゴシック" Size="12" Color="WhiteSmoke" Bold="True" />
+<LineAttr AttrName="Line1" Width="0.3" />
+<LineAttr AttrName="Line2" Color="0" Width="0" />
+<LineAttr AttrName="Line3" Color="0" Width="0" />
+<LineAttr AttrName="Line4" Color="0" Width="0" />
+<LineAttr AttrName="Line5" Color="0" Width="0" />
+<LineAttr AttrName="Line6" Color="0" Width="0" />
+<LineAttr AttrName="Line7" Color="0" Width="0" />
+<LineAttr AttrName="Line8" Color="0" Width="0" />
+<LineAttr AttrName="Line9" Color="0" Width="0" />
+<LineAttr AttrName="Line10" Color="WhiteSmoke" Width="0.3" />
+<LineAttr AttrName="Line11" Color="WhiteSmoke" Width="0.3" />
+<LineAttr AttrName="Line12" Color="WhiteSmoke" Width="0.3" />
+<LineAttr AttrName="Line13" Color="WhiteSmoke" Width="0.3" />
+</PrintAttrs>
+<Paper Size="A4" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="0" DesignScale="100" GridFit="False" ObjLock="False" X="0" Y="0" Width="0" Height="0" DisplayRepeatObject="False" RepeatObjectColor="Silver" />
+</PrintSetting>
+<PrintObjects>
+<Square Name="Square22" X="93.9" Y="28" Width="30" Height="6" LineAttr="Line10" PaintColor="DarkSlateBlue" R="0" >
+</Square>
+<Square Name="枠_小分類" X="42" Y="34" Width="52" Height="10" LineAttr="Line1" PaintColor="ffdbf5fd" R="0" IntervalY="10" Repeat="20" >
+</Square>
+<Square Name="枠_大分類" X="12" Y="34" Width="30" Height="10" LineAttr="Line1" PaintColor="ffdbf5fd" R="0" IntervalY="10" Repeat="20" >
+</Square>
+<Square Name="枠_品番" X="94" Y="34" Width="30" Height="10" LineAttr="Line1" PaintColor="ffdbf5fd" R="0" IntervalY="10" Repeat="20" >
+</Square>
+<Square Name="枠_品名" X="124" Y="34" Width="74" Height="10" LineAttr="Line1" PaintColor="ffdbf5fd" R="0" IntervalY="10" Repeat="20" >
+</Square>
+<Square Name="Square8" X="124.2" Y="28" Width="74.3" Height="6" LineAttr="Line11" PaintColor="DarkSlateBlue" R="0" >
+</Square>
+<Square Name="Square4" X="42.1" Y="28" Width="51.5" Height="6" LineAttr="Line12" PaintColor="DarkSlateBlue" R="0" >
+</Square>
+<Square Name="Square3" X="11.5" Y="28" Width="30.3" Height="6" LineAttr="Line13" PaintColor="DarkSlateBlue" R="0" >
+</Square>
+<Text Name="Field11" X="94" Y="29.5" Width="29.5" Height="4" Text="品番" Align="Center" VAlign="Top" FontAttr="Font2" />
+<Text Name="Field14" X="124.2" Y="29.5" Width="72" Height="6" Text="品名" Align="Center" VAlign="Top" FontAttr="Font2" />
+<Text Name="Text28" X="42" Y="29.5" Width="51.5" Height="4" Text="小分類" Align="Center" VAlign="Top" FontAttr="Font2" />
+<Text Name="Text29" X="11.8" Y="29.5" Width="28.3" Height="4" Text="大分類" Align="Center" VAlign="Top" FontAttr="Font2" />
+<Text Name="大分類" X="14" Y="38" Width="25.9" Height="4" Text="文字列" Align="Left" VAlign="Top" FontAttr="Font1" IntervalY="10" Repeat="20" />
+<Text Name="小分類" X="44" Y="38" Width="48" Height="4" Text="文字列" Align="Left" VAlign="Top" FontAttr="Font1" IntervalY="10" Repeat="20" />
+<Text Name="品番" X="96" Y="38" Width="25.9" Height="4" Text="文字列" Align="Left" VAlign="Top" FontAttr="Font1" IntervalY="10" Repeat="20" />
+<Text Name="品名" X="126" Y="38" Width="70" Height="4" Text="文字列" Align="Left" VAlign="Top" FontAttr="Font1" IntervalY="10" Repeat="20" />
+</PrintObjects>
+</PrintDefine>

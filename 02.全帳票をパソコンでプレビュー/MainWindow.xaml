@@ -1,0 +1,7 @@
+<Window x:Class="ReportsWpf.AllReports.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Reports Web | 全帳票サンプル" Width="760" Height="560" WindowStartupLocation="CenterScreen">
+  <Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <TextBlock FontSize="24" FontWeight="SemiBold" Text="全帳票をパソコンでプレビュー" Margin="0,0,0,16"/>
+    <ListBox x:Name="Samples" Grid.Row="1" DisplayMemberPath="Value" SelectedValuePath="Key"/>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,16,0,0"><Button Width="160" Padding="8" Click="Preview_Click">選択した帳票を開く</Button><TextBlock x:Name="Status" Margin="16,10,0,0"/></StackPanel>
+  </Grid>
+</Window>

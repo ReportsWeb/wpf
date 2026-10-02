@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="10.2.0" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="ＭＳ ゴシック" Size="15.75" />
+<FontAttr AttrName="Font2" Name="ＭＳ ゴシック" Size="27.75" Bold="True" />
+<FontAttr AttrName="Font3" Name="ＭＳ ゴシック" Size="14.25" />
+<FontAttr AttrName="Font4" Name="ＭＳ ゴシック" Size="22" Bold="True" />
+<FontAttr AttrName="Font5" Name="メイリオ" Size="15.75" />
+<FontAttr AttrName="Font6" Name="ＭＳ ゴシック" Size="13" />
+<FontAttr AttrName="Font7" Name="ＭＳ ゴシック" Size="20.25" Bold="True" />
+<FontAttr AttrName="Font8" Name="Courier New" Size="21.75" Bold="True" />
+<LineAttr AttrName="Line1" Width="0.3" />
+<LineAttr AttrName="Line2" Width="0.6" />
+<LineAttr AttrName="Line3" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line4" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line5" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line6" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line7" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line8" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line9" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line10" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line11" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line12" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line13" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line14" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line15" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line16" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line17" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line18" Color="Transparent" Width="0" />
+<LineAttr AttrName="Line19" Color="Transparent" Width="0.3" />
+<LineAttr AttrName="Line20" Color="Transparent" Width="0" />
+</PrintAttrs>
+<Paper Size="A4" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="2" DesignScale="100" GridFit="True" ObjLock="False" X="0" Y="0" Width="210" Height="297" DisplayRepeatObject="False" RepeatObjectColor="Silver" ImageSizeType="Clip" />
+</PrintSetting>
+<PrintObjects>
+<Square Name="LineRect" X="10" Y="64" Width="190" Height="16" LineAttr="Line19" PaintColor="PeachPuff" R="0" IntervalY="16" Repeat="14" >
+</Square>
+<Text Name="lblTitle" X="10" Y="4" Width="190" Height="14" Text="請求書" Align="Center" VAlign="Top" FontAttr="Font2" />
+<Text Name="txtNo" X="182" Y="14" Width="25.9" Height="6" Text="99999999" Align="Right" VAlign="Top" FontAttr="Font3" />
+<Text Name="txtDate" X="166" Y="6" Width="42" Height="6" Text="YYYY年MM月DD日" Align="Right" VAlign="Top" FontAttr="Font3" />
+<Text Name="lblNo" X="156" Y="14" Width="27.9" Height="6" Text="請求番号：" Align="Right" VAlign="Top" FontAttr="Font3" />
+<Line Name="hLine" StartX="10" StartY="64" EndX="200" EndY="64" LineAttr="Line1" IntervalY="16" Repeat="15" />
+<Line Name="vLine" StartX="10" StartY="64" EndX="10" EndY="288" LineAttr="Line1" IntervalX="38" Repeat="6" />
+<Text Name="field1" X="10" Y="68" Width="38" Height="8" Text="品番" Align="Center" VAlign="Top" FontAttr="Font1" IntervalY="16" Repeat="14" />
+<Text Name="field2" X="48" Y="68" Width="38" Height="8" Text="品名" Align="Center" VAlign="Top" FontAttr="Font1" IntervalY="16" Repeat="14" />
+<Text Name="field3" X="86" Y="68" Width="38" Height="8" Text="数量" Align="Center" VAlign="Top" FontAttr="Font1" IntervalY="16" Repeat="14" />
+<Text Name="field4" X="124" Y="68" Width="38" Height="8" Text="単価" Align="Center" VAlign="Top" FontAttr="Font1" IntervalY="16" Repeat="14" />
+<Text Name="field5" X="162" Y="68" Width="38" Height="8" Text="金額" Align="Center" VAlign="Top" FontAttr="Font1" IntervalY="16" Repeat="14" />
+<Text Name="Text10" X="118" Y="22" Width="22" Height="8" Text="御中" Align="Left" VAlign="Top" FontAttr="Font4" />
+<Text Name="txtCustomer" X="8" Y="22" Width="112" Height="8" Text="株式会社　ユニバーサルエンジニアリング" Align="Left" VAlign="Top" FontAttr="Font5" />
+<Text Name="Text12" X="6" Y="34" Width="96" Height="8" Text="下記の通り御請求申し上げます。" Align="Left" VAlign="Top" FontAttr="Font3" />
+<Text Name="Text13" X="152" Y="24" Width="56" Height="38" Text="〒275-0026
+千葉県習志野市谷津3-29
+
+有限会社 Pao@Office
+担当：村井 誠
+
+TEL: 047-452-0057
+FAX: 047-452-0064
+
+" Align="Left" VAlign="Top" FontAttr="Font6" />
+<Line Name="Line4" StartX="6" StartY="30" EndX="138" EndY="30" LineAttr="Line2" />
+<Text Name="Text14" X="8" Y="48" Width="44" Height="8" Text="御請求金額" Align="Left" VAlign="Top" FontAttr="Font7" />
+<Text Name="txtTotal" X="54" Y="48" Width="74" Height="10" Text="999,999,999,999" Align="Right" VAlign="Top" FontAttr="Font8" />
+<Text Name="Text16" X="132" Y="48" Width="10" Height="8" Text="円" Align="Left" VAlign="Top" FontAttr="Font7" />
+<Line Name="Line4" StartX="8" StartY="58" EndX="144" EndY="58" LineAttr="Line2" />
+<Image Name="Image1" X="180" Y="24" Width="26" Height="26" LineAttr="Line20" />
+</PrintObjects>
+</PrintDefine>

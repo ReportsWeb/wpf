@@ -1,0 +1,284 @@
+.native-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-bottom: 1px solid #c9d5e4;
+  background: linear-gradient(180deg, #f9fbfe 0%, #edf3f9 100%);
+  box-shadow: inset 0 1px #fff, 0 2px 7px #28476616;
+}
+.native-restore-settings {
+  display: none;
+  position: absolute;
+  z-index: 20;
+  top: 10px;
+  right: 10px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #79a8d8;
+  border-radius: 8px;
+  background: #fff;
+  color: #123f71;
+  font: 650 14px system-ui, "Yu Gothic UI", Meiryo, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #2847662e;
+}
+.native-preview-only .native-restore-settings:not([hidden]) {
+  display: block;
+}
+.native-tool,
+.native-toolbar select,
+.native-toolbar input {
+  font: inherit;
+  border: 1px solid #b8c6d6;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff 0%, #f4f7fb 100%);
+  color: #233b57;
+  padding: 7px 10px;
+  box-shadow: 0 1px 2px #1b36551a, inset 0 1px #fff;
+}
+.native-tool {
+  cursor: pointer;
+  min-height: 36px;
+  font-weight: 650;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, transform .08s ease, box-shadow .15s ease;
+}
+.native-tool:hover {
+  background: #e9f2ff;
+  border-color: #79a8d8;
+  color: #123f71;
+  box-shadow: 0 2px 7px #2c659126;
+}
+.native-tool:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 3px #173b6325;
+}
+.native-tool:focus-visible,
+.native-toolbar select:focus-visible,
+.native-toolbar input:focus-visible {
+  outline: 3px solid #66a9eb66;
+  outline-offset: 1px;
+}
+.native-tool.is-active {
+  background: linear-gradient(180deg, #256fb2 0%, #14548d 100%);
+  border-color: #0e4b82;
+  color: #fff;
+  box-shadow: 0 2px 6px #164f8538, inset 0 1px #ffffff42;
+}
+.native-tool:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.native-tool[hidden],
+.native-group[hidden] {
+  display: none !important;
+}
+.native-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-right: 7px;
+  border-right: 1px solid #ccd7e3;
+}
+.native-group.search { border-right: 0; }
+.native-spacer {
+  flex: 1;
+}
+.native-pages {
+  height: clamp(350px, 70vh, 900px);
+  overflow: auto;
+  background: #e5e9ef;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+.native-pages.single {
+  justify-content: center;
+}
+.native-pages.continuous {
+  flex-direction: column;
+  align-items: center;
+}
+.native-pages.spread {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.native-page {
+  display: block;
+  background: #fff;
+  box-shadow: 0 3px 12px #25344d30;
+  flex: none;
+}
+.native-page svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.native-pdf {
+  width: 100%;
+  height: 100%;
+  min-height: clamp(350px, 70vh, 900px);
+  border: 0;
+  background: #fff;
+}
+.native-status {
+  padding: 9px 13px;
+  border-top: 1px solid #d4dee9;
+  background: linear-gradient(180deg, #fbfcfe, #f3f7fb);
+  color: #4b6077;
+  font-size: 13px;
+  min-height: 36px;
+}
+.native-status.error {
+  color: #a42222;
+  background: #fff1f1;
+}
+.native-dialog {
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 18px 60px #15233855;
+  padding: 20px;
+  max-width: min(620px, 92vw);
+}
+.native-dialog::backdrop {
+  background: #1b26374d;
+}
+.native-dialog h2 {
+  margin: 0 0 12px;
+}
+.native-dialog fieldset {
+  border: 1px solid #d5dce6;
+  border-radius: 8px;
+  margin: 12px 0;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 8px;
+}
+.native-dialog label {
+  font-weight: 500;
+}
+.native-settings-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.native-hit {
+  outline: 3px solid #ffb000 !important;
+  outline-offset: 1px;
+}
+.native-current-hit {
+  outline: 3px solid #e33 !important;
+  background: #fff08a !important;
+}
+/* SVG image outlines use page units: keep adjacent small text unobscured. */
+.native-page image.native-hit,
+.native-page image.native-current-hit {
+  outline-width: .5px !important;
+  outline-offset: 0;
+}
+.native-hide-text .tool-text {
+  display: none;
+}
+.native-large .native-tool {
+  font-size: 17px;
+  padding: 9px 11px;
+}
+.native-preview-only {
+  position: relative;
+  margin-top: 0;
+  border-radius: 0;
+}
+.native-preview-only .native-pages {
+  height: 100vh;
+}
+.native-toolbar[hidden] + .native-pages {
+  border-top: 0;
+}
+@media (max-width: 700px) {
+  .native-toolbar {
+    gap: 4px;
+  }
+  .native-group {
+    flex-wrap: wrap;
+    max-width: 100%;
+    min-width: 0;
+    border-right: 0;
+  }
+  .native-group label,
+  #npTotal {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .native-spacer {
+    display: none;
+  }
+  .native-group.search {
+    width: 100%;
+  }
+  .native-group.search input {
+    flex: 1;
+    min-width: 100px;
+    flex-basis: 100%;
+  }
+  .native-dialog fieldset {
+    grid-template-columns: 1fr;
+  }
+}
+@media print {
+  body > * {
+    display: none !important;
+  }
+  #nativePreviewer {
+    display: block !important;
+    border: 0 !important;
+    margin: 0 !important;
+  }
+  .native-toolbar,
+  .native-status,
+  .native-pdf {
+    display: none !important;
+  }
+  .native-pages {
+    display: block !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+  .native-page {
+    break-after: page;
+    box-shadow: none !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  .native-page svg {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+.native-toolbar[hidden],
+.native-status[hidden] {
+  display: none !important;
+}
+.native-tool svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -4px;
+}
+#npOpen { color: #17649b; }
+#npSave { color: #14765f; }
+#npPrint { color: #7844a8; }
+#npPdf { color: #b33a35; }
+#npSvg { color: #176f78; }
+#npSettings { color: #596779; }
+#npAbout { color: #2e6296; }
+#npOpen:hover, #npSave:hover, #npPrint:hover, #npPdf:hover, #npSvg:hover,
+#npSettings:hover, #npAbout:hover { color: inherit; }
+#npPdf.is-active, #npSvg.is-active { color: #fff; }

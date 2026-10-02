@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="1.00" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="ＭＳ ゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="ＭＳ ゴシック" Size="20.25" Bold="True" />
+<LineAttr AttrName="Line1" Width="0.3" />
+</PrintAttrs>
+<Paper Size="A4" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="2" GridFit="False" ObjLock="False" DesignScale="100" />
+</PrintSetting>
+<PrintObjects>
+<Square Name="Square1" X="6" Y="22" Width="190" Height="8" LineAttr="Line1" PaintColor="ffe0e0e0" R="3" BR="Angle" BL="Angle" >
+</Square>
+<Text Name="Field1" X="44" Y="6" Width="110" Height="8" Text="印刷テストプログラム" Align="Center" FontAttr="Font2" />
+<Text Name="郵便番号" X="8" Y="32" Width="18" Height="4" Text="999-9999" Align="Center" FontAttr="Font1" IntervalY="8" Repeat="32" />
+<Text Name="Field3" X="8" Y="24" Width="18" Height="4" Text="郵便番号" Align="Center" FontAttr="Font1" />
+<Line Name="横罫線" StartX="6" StartY="38" EndX="196" EndY="38" LineAttr="Line1" IntervalY="8" Repeat="32" />
+<Text Name="Field4" X="30" Y="24" Width="46" Height="4" Text="市区町村" Align="Center" FontAttr="Font1" />
+<Text Name="Field5" X="80" Y="24" Width="116" Height="4" Text="住所" Align="Center" FontAttr="Font1" />
+<Text Name="市区町村" X="30" Y="32" Width="46" Height="4" Text="ＸＸ県ＸＸ市" Align="Center" FontAttr="Font1" IntervalY="8" Repeat="32" />
+<Text Name="住所" X="80" Y="32" Width="116" Height="4" Text="ＸＸＸＸＸＸＸＸＸ" Align="Center" FontAttr="Font1" IntervalY="8" Repeat="32" />
+<Text Name="日時" X="146" Y="8" Width="22" Height="6" Text="9999/99/99 99:99:99" Align="Center" FontAttr="Font1" />
+<Text Name="ページ" X="180" Y="8" Width="16" Height="4" Text="Page-999" Align="Left" FontAttr="Font1" />
+<Line Name="Line2" StartX="28" StartY="22" EndX="28" EndY="286" LineAttr="Line1" />
+<Line Name="Line3" StartX="78" StartY="22" EndX="78" EndY="286" LineAttr="Line1" />
+<Line Name="Line4" StartX="196" StartY="30" EndX="196" EndY="286" LineAttr="Line1" />
+<Line Name="Line5" StartX="6" StartY="30" EndX="6" EndY="286" LineAttr="Line1" />
+<Barcode Name="QR" X="10" Y="0.9" Width="20" Height="20" QrVersion="5" QrErrCorrect="M" Kind="QRCode" Code="123456789012" WriteDirect="True" />
+</PrintObjects>
+</PrintDefine>

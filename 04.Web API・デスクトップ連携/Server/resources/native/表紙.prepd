@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="1.00" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="ＭＳ ゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="ＭＳ ゴシック" Size="24" />
+<FontAttr AttrName="Font3" Name="ＭＳ ゴシック" Size="12" />
+<LineAttr AttrName="Line1" Width="0.3" />
+</PrintAttrs>
+<Paper Size="A4" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="2" GridFit="True" DesignScale="100" />
+</PrintSetting>
+<PrintObjects>
+<Text Name="Field1" X="90" Y="130" Width="30" Height="10" Angle="0" Text="見積書" Elastic="False" Align="Left" FontAttr="Font2" />
+<Text Name="お客様名" X="80" Y="100" Width="44" Height="6" Angle="0" Text="Ｘ１２３４５６７Ｘ" Elastic="False" Align="Left" FontAttr="Font3" />
+<Line Name="Line1" StartX="80" StartY="106" EndX="130" EndY="106" LineAttr="Line1" />
+<Text Name="Field4" X="124" Y="100" Width="6" Height="6" Angle="0" Text="様" Elastic="False" Align="Left" FontAttr="Font3" />
+<Text Name="Field7" X="62" Y="160" Width="86" Height="30" Angle="0" Text="有限会社パオ・アット・オフィス
+
+
+〒116-0013 東京都荒川区西日暮里5-37-5
+西日暮里ｽﾀｰﾄｱｯﾌﾟｵﾌｨｽ207号室
+TEL: 03-5850-3511
+FAX: 03-5850-3512
+" Elastic="False" Align="Center" FontAttr="Font3" />
+<Text Name="Field10" X="84" Y="194" Width="16" Height="6" Angle="0" Text="担当：" Elastic="False" Align="Left" FontAttr="Font3" />
+<Text Name="担当者名" X="100" Y="194" Width="32" Height="6" Angle="0" Text="波尾後御歩素" Elastic="False" Align="Left" FontAttr="Font3" />
+</PrintObjects>
+</PrintDefine>
