@@ -17,6 +17,6 @@
     <Compile Include="..\App.xaml.cs" Link="App.xaml.cs" />
     <ApplicationDefinition Include="..\App.xaml" Link="App.xaml" />
     <Content Include="..\quick-start.prepdj" Link="quick-start.prepdj" CopyToOutputDirectory="PreserveNewest" />
-    <PackageReference Include="Reports.Web.Wpf" Version="1.0.0" />
+    <PackageReference Include="Reports.Web.Wpf" Version="1.1.0" />
   </ItemGroup>
 </Project>

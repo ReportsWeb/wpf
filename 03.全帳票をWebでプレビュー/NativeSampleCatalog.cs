@@ -20,7 +20,8 @@ public sealed class NativeSampleCatalog(string resources, string databasePath)
 
     byte[] Load(string name)
     {
-        var asset = Path.Combine(resources, "native", name);
+        // サーバー自身の資産だけを、資産フォルダーの中に限って読む。
+        var asset = UntrustedImageSourcePolicy.ResolveTrustedAssetPath(Path.Combine(resources, "native"), name);
         if (File.Exists(asset)) return File.ReadAllBytes(asset);
         return name switch
         {

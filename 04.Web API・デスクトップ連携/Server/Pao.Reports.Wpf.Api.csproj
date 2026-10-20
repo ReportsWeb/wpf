@@ -4,7 +4,7 @@
     <Compile Remove="ReportData\bin\**;ReportData\obj\**" /><None Remove="ReportData\bin\**;ReportData\obj\**" /><Content Remove="ReportData\bin\**;ReportData\obj\**" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
-    <PackageReference Include="Reports.Web.Wpf" Version="1.0.0" />
+    <PackageReference Include="Reports.Web.Wpf" Version="1.1.0" />
     <Content Update="resources\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="resources\definitions\*.prepdj;resources\images\*;resources\native\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\..\common\database\sample.db" CopyToOutputDirectory="PreserveNewest" Link="database\sample.db" />

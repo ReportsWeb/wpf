@@ -44,9 +44,11 @@ public static class BusinessReports
             Add(page, "消費税額", Number(header, "消費税額").ToString("N0"));
             Add(page, "フッタ合計", Number(header, "合計金額").ToString("N0"));
 
-            string[] backgrounds = ["品番白", "品名白", "数量白", "単価白", "金額白", "品番青", "品名青", "数量青", "単価青", "金額青"];
+            // 繰返しの物は、そのページで一度も書かなければ定義どおり 1 行目に 1 回だけ描く（原本 Reports.net と同じ。D-37）。
+            // 青の背景と同じ位置の四角 Square10・Square5 も、毎行に描くため値なし（null）で書く。
+            string[] backgrounds = ["品番白", "品名白", "数量白", "単価白", "金額白", "品番青", "品名青", "数量青", "単価青", "金額青", "Square10", "Square5"];
             for (var row = 0; row < 7; row++)
-                foreach (var name in backgrounds) AddRepeated(page, name, "", row);
+                foreach (var name in backgrounds) AddRepeated(page, name, null, row);
 
             var line = 0;
             foreach (var detail in details.Where(item => Text(item, "見積番号") == number))
@@ -88,8 +90,8 @@ public static class BusinessReports
                 AddRepeated(page, "郵便番号", Text(row, "郵便番号"), line);
                 AddRepeated(page, "市区町村", Text(row, "市区町村"), line);
                 AddRepeated(page, "住所", Text(row, "住所"), line);
-                AddRepeated(page, "横罫線", "", line);
-                if (pageNumber > 5 && (line + 1) % 2 == 0) AddRepeated(page, "網掛け", "", line / 2);
+                AddRepeated(page, "横罫線", null, line);
+                if (pageNumber > 5 && (line + 1) % 2 == 0) AddRepeated(page, "網掛け", null, line / 2);
             }
         }
         return PrintDataStore.Validate(result, preserveArtText);
@@ -140,8 +142,8 @@ public static class BusinessReports
             AddRepeated(page, "field4", "消費税", 12); AddRepeated(page, "field5", tax.ToString("N0"), 12);
             AddRepeated(page, "field4", "合計", 13); AddRepeated(page, "field5", (total + tax).ToString("N0"), 13);
             Add(page, "txtTotal", (total + tax).ToString("N0"));
-            for (var row = 0; row < 15; row++) AddRepeated(page, "hLine", "", row);
-            for (var row = 0; row < 14; row++) AddRepeated(page, "LineRect", "", row);
+            for (var row = 0; row < 15; row++) AddRepeated(page, "hLine", null, row);
+            for (var row = 0; row < 14; row++) AddRepeated(page, "LineRect", null, row);
         }
         var materialized = new PrintDataDocument();
         foreach (var resolved in PrintDataStore.Resolve(result))
@@ -214,7 +216,7 @@ public static class BusinessReports
             {
                 AddRepeated(page, "大分類", rows[line].Large, line); AddRepeated(page, "小分類", rows[line].Small, line);
                 AddRepeated(page, "品番", rows[line].Number, line); AddRepeated(page, "品名", rows[line].Name, line);
-                foreach (var frame in new[] { "枠_大分類", "枠_小分類", "枠_品番", "枠_品名" }) AddRepeated(page, frame, "", line);
+                foreach (var frame in new[] { "枠_大分類", "枠_小分類", "枠_品番", "枠_品名" }) AddRepeated(page, frame, null, line);
             }
         }
         var materialized = new PrintDataDocument();
@@ -262,6 +264,7 @@ public static class BusinessReports
     }
     private static void Add(PrintDataPage page, string name, string value, string type = "DynamicText") =>
         page.Values.Add(new PrintDataValue { Name = name, Type = type, Value = value });
-    private static void AddRepeated(PrintDataPage page, string name, string value, int row) =>
+    // 罫線・図形（横罫線・網掛け・背景の四角・枠など）は値なし（null）で描く。"" を書くと描かない（原本 Reports.net と同じ。D-33）。
+    private static void AddRepeated(PrintDataPage page, string name, string? value, int row) =>
         page.Values.Add(new PrintDataValue { Name = name, Type = "DynamicText", IndexX = 0, IndexY = row, Value = value });
 }

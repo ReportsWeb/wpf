@@ -70,7 +70,8 @@ public sealed class SampleCatalog(string resources, string databasePath, Func<Da
                 p
                     .SetValue("行番号", n, i)
                     .SetValue("10倍数", n * 10, i)
-                    .SetValue("横線", "", i);
+                    // 罫線・図形は値なし（null）で描く。"" を書くと描かない（原本 Reports.net と同じ。D-33）。
+                    .SetValue("横線", null, i);
                 // 100で割り切れる値だけ、この行の文字色を青にする。
                 if ((n * 10) % 100 == 0) p.ChangeRowAttributes("10倍数", A(("FontColor", "#0000FF")), i);
             }
@@ -99,10 +100,10 @@ public sealed class SampleCatalog(string resources, string databasePath, Func<Da
                     .SetValue("郵便番号", v.ElementAtOrDefault(0) ?? "", i)
                     .SetValue("市区町村", v.ElementAtOrDefault(1) ?? "", i)
                     .SetValue("住所", v.ElementAtOrDefault(2) ?? "", i)
-                    .SetValue("横罫線", "", i);
+                    .SetValue("横罫線", null, i);
                 if (page >= 5 && i % 2 == 1)
                     p
-                        .SetValue("網掛け", "", i);
+                        .SetValue("網掛け", null, i);
             }
             if (page < 5)
             {
@@ -137,11 +138,13 @@ public sealed class SampleCatalog(string resources, string databasePath, Func<Da
                 .SetValue("ヘッダ合計", "\\ " + Number(S(h, "合計金額")))
                 .SetValue("消費税額", Number(S(h, "消費税額")))
                 .SetValue("フッタ合計", Number(S(h, "合計金額")));
+            // 繰返しの物は、そのページで一度も書かなければ定義どおり 1 行目に 1 回だけ描く（原本 Reports.net と同じ。D-37）。
+            // 背景の四角は毎行に描くため、値なし（null）で書く（青の背景と同じ位置の Square10・Square5 も）。
             for (int i = 0; i <= 6; i++)
                 foreach (var n in new[] {
- "品番白", "品名白", "数量白", "単価白", "金額白", "品番青", "品名青", "数量青", "単価青", "金額青" })
+ "品番白", "品名白", "数量白", "単価白", "金額白", "品番青", "品名青", "数量青", "単価青", "金額青", "Square10", "Square5" })
                     p
-                        .SetValue(n, "", i);
+                        .SetValue(n, null, i);
             int row = 0;
             foreach (var r in Match(details, "見積番号", S(h, "見積番号")))
             {
@@ -182,8 +185,8 @@ public sealed class SampleCatalog(string resources, string databasePath, Func<Da
                 .SetImage("Image1", Convert.ToBase64String(File.ReadAllBytes(Path.Combine(resources, "images", "kakuin.png"))));
             for (int i = 0; i < 15; i++)
             {
-                p.SetValue("hLine", "", i);
-                if (i < 14) p.SetValue("LineRect", "", i);
+                p.SetValue("hLine", null, i);
+                if (i < 14) p.SetValue("LineRect", null, i);
             }
             string[] labels = ["品番", "品名", "数量", "単価", "金額"];
             for (int j = 0; j < labels.Length; j++)
@@ -276,7 +279,7 @@ public sealed class SampleCatalog(string resources, string databasePath, Func<Da
  "枠_大分類", "枠_小分類", "枠_品番", "枠_品名" })
                 {
                     p
-                        .SetValue(n, "", i);
+                        .SetValue(n, null, i);
                     if (r["kind"] != "detail")
                         p
                             .ChangeAttributes(n, A(("background", r["kind"] == "small" ? "#FFFFFFE0" : "#FFFFB6C1"), ("fillEnabled", true), ("fillStyle", "Solid")), i);

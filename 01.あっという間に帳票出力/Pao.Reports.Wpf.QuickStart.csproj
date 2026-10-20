@@ -12,7 +12,7 @@
     <Compile Remove="Compat-net472\**\*.cs" />
     <EmbeddedResource Remove="Compat-net472\**\*" />
     <None Remove="Compat-net472\bin\**\*;Compat-net472\obj\**\*" />
-    <PackageReference Include="Reports.Web.Wpf" Version="1.0.0" />
+    <PackageReference Include="Reports.Web.Wpf" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="quick-start.prepdj" CopyToOutputDirectory="PreserveNewest" />

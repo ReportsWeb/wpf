@@ -5,7 +5,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.13" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
-    <PackageReference Include="Reports.Web.Wpf" Version="1.0.0" />
+    <PackageReference Include="Reports.Web.Wpf" Version="1.1.0" />
     <Content Update="resources\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="resources\definitions\*.prepdj;resources\images\*;resources\native\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="resources\previewer\*" CopyToOutputDirectory="PreserveNewest" />
