@@ -1,4 +1,5 @@
 {
+  "CoordinateUnit": "mm",
   "Version": "13.0.0",
   "Title": "あっという間に帳票出力",
   "Paper": 6,

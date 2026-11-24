@@ -35,9 +35,8 @@ internal static class NativeDemoPrintDataPolicy
     public const long MaxTotalImagePixels = 120_000_000;
     public const int MaxObjectsPerPage = 100_000;
 
-    public static void CheckRenderBudget(IReadOnlyList<ResolvedReportPage> pages)
+    public static long CheckRenderBudget(IReadOnlyList<ResolvedReportPage> pages, long total = 0)
     {
-        long total = 0;
         foreach (var page in pages)
         {
             long objects = 0;
@@ -54,6 +53,7 @@ internal static class NativeDemoPrintDataPolicy
                 if (total > MaxTotalImagePixels) throw new RenderBudgetExceededException($"埋め込み画像の合計が大きすぎます（{MaxTotalImagePixels / 1_000_000} 百万画素まで）。");
             }
         }
+        return total;
     }
 
     // 画像と、繰返しで描かれる枚数。

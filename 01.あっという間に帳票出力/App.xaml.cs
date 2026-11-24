@@ -74,7 +74,7 @@ public partial class App : Application
             if(applying)return;applying=true;
             try
             {
-                var next=ReportCreator.Create();next.LoadDefFile(definition);next.PageStart();next.PageEnd();
+                var next=WindowsReportFactory.Create();next.LoadDefFile(definition);next.PageStart();next.PageEnd();
                 var data=Path.Combine(work,"quick-report.prepej");next.SaveJson(data);window.LoadData(data);
                 stamp=File.GetLastWriteTimeUtc(definition);
                 window.Title="あっという間に帳票出力 — 保存したデザインをプレビュー・PDFへ反映";

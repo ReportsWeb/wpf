@@ -6,7 +6,7 @@ SQLiteの業務データをC#で読み、8種類の帳票をPREPEJへ組み立�
 
 ## 準備と開き方
 
-Windows、.NET 10 SDK、Visual Studioの「.NETデスクトップ開発」が必要です。このリポジトリを `git clone` し、`Pao.Reports.Wpf.AllReports.csproj`をVisual Studioで開いてください。VS CodeやCursorなら、このREADMEがあるフォルダーを開きます。初回のNuGet復元時だけインターネット接続が必要です。DockerやDBサーバーは不要です。
+Windows、.NET 10 SDK、Visual Studioの「.NETデスクトップ開発」が必要です。正式ZIPは全体を完全に展開し、`Pao.Reports.Wpf.AllReports.csproj`をVisual Studioで開いてください。VS CodeやCursorなら、このREADMEがあるフォルダーを開きます。初回のNuGet復元時だけインターネット接続が必要です。DockerやDBサーバーは不要です。
 
 ## 起動と成功確認
 

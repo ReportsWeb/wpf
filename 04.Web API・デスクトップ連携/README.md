@@ -6,7 +6,7 @@ ServerがSQLiteから自己完結したPREPEJ印刷データを作り、Client�
 
 ## 準備と開き方
 
-Windows、.NET 10 SDK、Visual Studioの「.NETデスクトップ開発」と「ASP.NETとWeb開発」が必要です。このリポジトリを `git clone` してください。Visual Studioを2つ開き、最初に`Server/Pao.Reports.Wpf.Api.csproj`、次に`Client/Pao.Reports.Wpf.ApiClient.csproj`を開きます。VS CodeやCursorなら、このREADMEがある04フォルダーを開きます。Dockerと外部DBは不要です。
+Windows、.NET 10 SDK、Visual Studioの「.NETデスクトップ開発」と「ASP.NETとWeb開発」が必要です。正式ZIPを完全に展開してください。Visual Studioを2つ開き、最初に`Server/Pao.Reports.Wpf.Api.csproj`、次に`Client/Pao.Reports.Wpf.ApiClient.csproj`を開きます。VS CodeやCursorなら、このREADMEがある04フォルダーを開きます。Dockerと外部DBは不要です。
 
 ## 1. Serverを先に起動する
 

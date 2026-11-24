@@ -6,7 +6,7 @@ using Pao.Reports.Maui.Engine.Data;
 /// 項目 8（2026-10-14 コーディネーターの決定 A、IMPL-BRIEF 02:00 の形。4 版のサーバーで同じ）：その物体だけ描かなかった・既定値で読んだ などの
 /// 知らせは、要求を断らずに PDF・SVG を返し、200 の応答の見出し x-reports-image-diagnostics に添える。値は encodeURIComponent(JSON.stringify(配列))
 /// と同じ符号化（ASCII だけ）。要素は objectName・pageNumber（定義の読み込みの知らせは省く）・reason・source・message（日本語）の順で、値の無いものは出さない。
-/// reason：画像 unavailable・corrupt・unsupported、バーコード invalidBarcodeValue、unknownBarcodeKind・unknownEnumValue・unknownElement。
+/// reason：画像 unavailable・corrupt・unsupported・tooLarge（T16）、バーコード invalidBarcodeValue、unknownBarcodeKind・unknownEnumValue・unknownElement。
 /// この形に当てはまらない診断（値の書き先が無い など）は、今までどおり要求の誤りとして断る（Classify が null）。
 /// </summary>
 internal static class RenderDiagnosticsHeader
@@ -49,10 +49,18 @@ internal static class RenderDiagnosticsHeader
     private static readonly Regex Attribute = new("([A-Za-z0-9_]+)=\"", RegexOptions.CultureInvariant);
     private static readonly Regex Element = new("要素 <([^>]+)>", RegexOptions.CultureInvariant);
     private static readonly Regex Image = new("^Image object '(.*)': (.*); the image was not drawn\\.$", RegexOptions.CultureInvariant);
+    // T16：エンジンの知らせは日本語になった（ImageSourceDiagnostics.Message「画像「名前」を描きません：理由。」）。
+    private static readonly Regex JapaneseImage = new("^画像「(.*)」を描きません：(.*)。$", RegexOptions.CultureInvariant);
 
     private static Item? Classify(string text, int? page)
     {
         var name = Quoted.Match(text) is { Success: true } quoted ? quoted.Groups[1].Value : "";
+        if (text.StartsWith("UNKNOWN_DYNAMIC_ATTRIBUTE", StringComparison.Ordinal))
+        {
+            var attributeName=Regex.Match(text,"知らない属性名「([^」]*)」",RegexOptions.CultureInvariant);
+            return new(name,page,"unknownElement",attributeName.Success?attributeName.Groups[1].Value:null,
+                text.Substring("UNKNOWN_DYNAMIC_ATTRIBUTE".Length).TrimStart(' ',':'));
+        }
         if (text.Contains("[LEGACY_BARCODE_KIND]", StringComparison.Ordinal) || (text.StartsWith("バーコード「", StringComparison.Ordinal) && text.Contains("Code128 として描きます", StringComparison.Ordinal)))
         {
             var kind = KindValue.Match(text);
@@ -64,6 +72,13 @@ internal static class RenderDiagnosticsHeader
             return new(name, null, "unknownElement", element.Groups[1].Value, Clean(text));
         if (text.StartsWith("バーコード「", StringComparison.Ordinal) && text.EndsWith("ため描きません。", StringComparison.Ordinal))
             return new(name, page, "invalidBarcodeValue", null, text);
+        if (JapaneseImage.Match(text) is { Success: true } japaneseImage)
+        {
+            var cause = japaneseImage.Groups[2].Value;
+            var reason = cause.Contains("見つかりません", StringComparison.Ordinal) || cause.Contains("読めません", StringComparison.Ordinal) || cause.Contains("空です", StringComparison.Ordinal) || cause.Contains("開きません", StringComparison.Ordinal)
+                ? "unavailable" : cause.Contains("形式", StringComparison.Ordinal) ? "unsupported" : cause.Contains("大きすぎ", StringComparison.Ordinal) ? "tooLarge" : "corrupt";
+            return new(japaneseImage.Groups[1].Value, page, reason, null, text);
+        }
         if (Image.Match(text) is { Success: true } image)
         {
             var cause = image.Groups[2].Value;

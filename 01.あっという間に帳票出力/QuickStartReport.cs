@@ -1,4 +1,5 @@
 using Pao.Reports.Maui.Engine.Reports;
+using Pao.Reports.Wpf.Windows;
 
 namespace Pao.Reports.Wpf.QuickStart;
 
@@ -6,7 +7,7 @@ internal static class QuickStartReport
 {
     internal static IReport Create(string definitionPath)
     {
-        var report = ReportCreator.Create();
+        var report = WindowsReportFactory.Create();
         report.LoadDefFile(definitionPath);
         report.PageStart();
         report.Write("Title", "あっという間に帳票出力");

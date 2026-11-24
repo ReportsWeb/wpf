@@ -9,18 +9,18 @@
 3. プレビューが開きます。ツールバーからPDF保存や印刷を試せます。
 4. ソリューションエクスプローラーの `QuickStartReport.cs` を開き、`report.Write` の文字列や金額を変更して、もう一度実行してください。
 
-リンク表示されるソースの実体は、ひとつ上の01フォルダーにあります。変更は.NET 10版にも反映されます。サンプルをコピーするときは、このフォルダーだけでなく、01 全体を一緒に保持してください。
+リンク表示されるソースの実体は、ひとつ上の01フォルダーにあります。変更は.NET 10版にも反映されます。サンプルをコピーするときは、このフォルダーだけでなく、01全体をコピーしてください。帳票ライブラリは NuGet の `Reports.Web.Wpf` 1.3.0 から取得します。
 
-## どちらの対象フレームワークを選ぶか
+## どちらのSDKを選ぶか
 
-| 組み込み先 | 使われる DLL（NuGet `Reports.Web.Wpf` の中） |
+| 組み込み先 | 参照するSDK |
 |---|---|
-| .NET Framework 4.7.2以降 | net472 用（このプロジェクト） |
-| .NET 5～9のWindowsアプリ | net472 用（互換版）。アプリの対象.NETに合わせてプロジェクトを設定 |
-| .NET 10以降 | net10 用（ひとつ上の01プロジェクト） |
+| .NET Framework 4.7.2以降 | NuGet `Reports.Web.Wpf`（net472）（このプロジェクト） |
+| .NET 5～9のWindowsアプリ | NuGet `Reports.Web.Wpf`（net472）（互換版）。アプリの対象.NETに合わせてプロジェクトを設定 |
+| .NET 10以降 | NuGet `Reports.Web.Wpf`（net10）（ひとつ上の01プロジェクト） |
 
 `ReportCreator.Create`、`LoadDefFile`、`Write`、`ReportPreviewWindow`などの公開APIは共通です。互換版はFramework 4.7.2と.NET 8／9で代表動作を確認しています。.NET 5～7の全環境を実行確認したという意味ではありません。
 
 この例はWindows x64用です。プロジェクトには依存DLL、SkiaのネイティブDLL、Framework用binding redirectの設定を含めています。ご自身のプロジェクトへ移すときも、製品DLLだけでなくこれらの設定を移してください。
 
-全体の操作は [01のREADME](../README.md)、パッケージの詳細は [`Reports.Web.Wpf`](https://www.nuget.org/packages/Reports.Web.Wpf) のページをご覧ください。
+全体の操作は [01のREADME](../README.md)、参照DLLの詳細は [NuGet のパッケージ説明](https://www.nuget.org/packages/Reports.Web.Wpf) をご覧ください。

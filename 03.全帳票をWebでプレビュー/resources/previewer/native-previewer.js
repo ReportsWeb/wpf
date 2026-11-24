@@ -262,7 +262,7 @@
       // Java/Python SVGs use millimetres. The .NET renderer emits PDF-point
       // coordinates (72/inch). CSS uses 96px/inch, so both need a physical
       // 100% conversion instead of treating their numeric coordinates as px.
-      const cssUnit = millimetres ? 96 / 25.4 : cfg.engineHeader === "DotNet" ? 96 / 72 : 1;
+      const cssUnit = cfg.engineHeader === "DotNet" ? 96 / 72 : millimetres ? 96 / 25.4 : 1;
       const naturalWidth = w * cssUnit,
         naturalHeight = h * cssUnit;
       let mode = state.zoom;

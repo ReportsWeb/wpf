@@ -13,10 +13,10 @@ const int MaxPdfBytes = 64 * 1024 * 1024;
 // 4 つのサーバー（Web・Java・Python・.NET）で同じ 64MiB（2026-10-13 決定。以前の .NET は 8MiB）。
 const int MaxPrintDataBytes = 64 * 1024 * 1024;
 const string PrintDataMediaType = "application/vnd.pao.reports-printdata+json";
-var generationSlots = new SemaphoreSlim(2, 2);
+var generationSlots = new SemaphoreSlim(1, 1);
 // 受け取った印刷データ（/api/print-data）は 1 本ずつ展開する（W と同じ）。上限 64MiB の要求を 2 本同時に展開すると、
 // 最大のワーキングセットが 2.2GiB になった（B18、2026-10-13 コーディネーターの決定 (a)：メモリーを使い切る危険）。
-var uploadSlots = new SemaphoreSlim(1, 1);
+var uploadSlots = generationSlots; // C39: parsing and all generation routes share one memory budget.
 
 var builder = WebApplication.CreateBuilder(args);
 // 4 つのサーバーで同じ動き（2026-10-13 決定）：本文が届くまで 30 秒（超えたら 408）、生成は 60 秒（超えたら 503）、混雑の待ちは 30 秒（503）。
@@ -127,16 +127,12 @@ app.MapPost("/api/print-data/svg", async (HttpContext context, int? page) =>
     // 本文の受け取り・解析・展開も描画の枠の中で行う（同時に解析するのは枠の数まで。T-H1・BUG-28）。
     return await WithGenerationSlotAsync(context, uploadSlots, async token =>
     {
-        var upload = await ReadUploadedPrintData(context, token);
+        var upload = await ReadUploadedPrintData(context, token, page ?? 0);
         if (upload.Error is not null)
             return upload.Error;
 
-        var pageIndex = page ?? 0;
-        if (pageIndex < 0 || pageIndex >= upload.Pages!.Count)
-            return Results.BadRequest(new { error = "ページ番号が範囲外です。" });
-
         token.ThrowIfCancellationRequested();
-        var svg = new SvgReportRenderer().Render(upload.Pages[pageIndex].Document);
+        var svg = new SvgReportRenderer().Render(upload.Pages![0].Document);
         token.ThrowIfCancellationRequested();
         if (Encoding.UTF8.GetByteCount(svg) > MaxSvgBytes)
             return JsonError(StatusCodes.Status413PayloadTooLarge, "印刷データのサイズが上限を超えています。");
@@ -217,12 +213,12 @@ IResult? PrecheckUpload(HttpContext context)
     if (!IsSupportedPrintDataContentType(context.Request.ContentType))
         return JsonError(StatusCodes.Status415UnsupportedMediaType, "印刷データは JSON（application/json）で送ってください。");
     if (context.Request.ContentLength > MaxPrintDataBytes)
-        return JsonError(StatusCodes.Status413PayloadTooLarge, "印刷データのサイズが上限を超えています。");
+        return new DrainBodyThenResult(JsonError(StatusCodes.Status413PayloadTooLarge, "印刷データのサイズが上限を超えています。"), 2L * MaxPrintDataBytes, bodyTimeout);
     return null;
 }
 
 // 描画の枠の中で呼ぶ。chunked で上限を超えたら、その時点で読むのをやめて 413。
-async Task<UploadedPrintData> ReadUploadedPrintData(HttpContext context, CancellationToken token)
+async Task<UploadedPrintData> ReadUploadedPrintData(HttpContext context, CancellationToken token, int? svgPage = null)
 {
     var rejected = PrecheckUpload(context);
     if (rejected is not null)
@@ -245,22 +241,57 @@ async Task<UploadedPrintData> ReadUploadedPrintData(HttpContext context, Cancell
             }
             if (read == 0) break;
             if (input.Length + read > MaxPrintDataBytes)
-                return UploadedPrintData.Failure(JsonError(StatusCodes.Status413PayloadTooLarge, "印刷データのサイズが上限を超えています。"));
+                return UploadedPrintData.Failure(new DrainBodyThenResult(JsonError(StatusCodes.Status413PayloadTooLarge, "印刷データのサイズが上限を超えています。"), 2L * MaxPrintDataBytes, bodyTimeout));
             input.Write(buffer, 0, read);
         }
         if (input.Length == 0)
             return UploadedPrintData.Failure(Results.BadRequest(new { error = "PREPEJ印刷データが空です。" }));
 
-        var data = PrintDataStore.LoadJson(input.ToArray(), preserveArtText: true);
+        // C39: do not duplicate a 64MiB body before the reader copies it again.
+        // JSON permits outer whitespace; exclude it from parser/source snapshots.
+        var bodyBytes = input.GetBuffer();
+        var start = 0;
+        var end = checked((int)input.Length);
+        static bool JsonSpace(byte value) => value is 0x20 or 0x09 or 0x0A or 0x0D;
+        while (start < end && JsonSpace(bodyBytes[start])) start++;
+        while (end > start && JsonSpace(bodyBytes[end - 1])) end--;
+        using var content = new MemoryStream(bodyBytes, start, end - start, writable: false);
+        var data = PrintDataStore.LoadJson(content, preserveArtText: true);
         NativeDemoPrintDataPolicy.Validate(data, requireSelfContained: true);
-        var pages = NativeDemoPrintDataPolicy.ResolveUploaded(data);
+        IReadOnlyList<ResolvedReportPage> pages;
+        IReadOnlyList<ResolvedReportPage> diagnosticPages;
+        if (svgPage is { } selected)
+        {
+            if (selected < 0 || selected >= data.Pages.Count)
+                return UploadedPrintData.Failure(Results.BadRequest(new { error = "ページ番号が範囲外です。" }));
+            var kept = new List<ResolvedReportPage>(1);
+            var summaries = new List<ResolvedReportPage>(data.Pages.Count);
+            var diagnosticDocument = new ReportDocument(); // Header.Build reads Index/Diagnostics only.
+            long imagePixels = 0;
+            var ordinal = 0;
+            foreach (var resolved in UntrustedImageSourcePolicy.ResolvePages(data))
+            {
+                token.ThrowIfCancellationRequested();
+                imagePixels = NativeDemoPrintDataPolicy.CheckRenderBudget([resolved], imagePixels);
+                if (ordinal++ == selected) kept.Add(resolved);
+                summaries.Add(new ResolvedReportPage { Index = resolved.Index,
+                    Document = diagnosticDocument, Diagnostics = resolved.Diagnostics });
+            }
+            pages = kept;
+            diagnosticPages = summaries;
+        }
+        else
+        {
+            pages = NativeDemoPrintDataPolicy.ResolveUploaded(data);
+            NativeDemoPrintDataPolicy.CheckRenderBudget(pages);
+            diagnosticPages = pages;
+        }
         // 項目 8（2026-10-14 決定 A）：その物体だけ描かなかった・既定値で読んだ などの知らせは断らずに、応答の見出しに添える（RenderDiagnosticsHeader）。
         // それ以外の診断（値の書き先が無い など）は今までどおり要求の誤りとして断る。
-        var (unclassified, diagnosticsHeader) = RenderDiagnosticsHeader.Build(pages);
+        var (unclassified, diagnosticsHeader) = RenderDiagnosticsHeader.Build(diagnosticPages);
         if (unclassified.Count != 0)
             throw new InvalidDataException(string.Join(" | ", unclassified.Take(10)));
         // 描くと何倍にも膨らむ入力（巨大な画素数の画像、繰返しで広がるオブジェクト）は描く前に断る（T-H1・BUG-28）。
-        NativeDemoPrintDataPolicy.CheckRenderBudget(pages);
         return UploadedPrintData.Success(pages, diagnosticsHeader);
     }
     catch (OperationCanceledException) { throw; }
@@ -272,10 +303,14 @@ async Task<UploadedPrintData> ReadUploadedPrintData(HttpContext context, Cancell
     {
         return UploadedPrintData.Failure(Results.Json(new { error = exception.Message }, statusCode: StatusCodes.Status413PayloadTooLarge));
     }
-    catch (InvalidDataException exception) when (exception.Message == UntrustedImageSourcePolicy.RejectionMessage)
+    catch (InvalidDataException exception) when (exception.Message.EndsWith(UntrustedImageSourcePolicy.RejectionMessage, StringComparison.Ordinal))
     {
         // 送られたパスや URL は応答に入れない（固定の文言だけを返す）。
-        return UploadedPrintData.Failure(Results.BadRequest(new { error = UntrustedImageSourcePolicy.RejectionMessage }));
+        return UploadedPrintData.Failure(Results.BadRequest(new { error = exception.Message }));
+    }
+    catch (Exception exception) when (ImageDecodeFailureMessage(exception) is not null)
+    {
+        return UploadedPrintData.Failure(Results.BadRequest(new { error = ImageDecodeFailureMessage(exception) }));
     }
     catch (Exception exception) when (exception is InvalidDataException or System.Text.Json.JsonException or FormatException or NotSupportedException or ArgumentException)
     {
@@ -285,6 +320,16 @@ async Task<UploadedPrintData> ReadUploadedPrintData(HttpContext context, Cancell
 
 // 誤りの本文は 4 つのサーバーで同じ形 {"error":"日本語の理由"}（2026-10-13 決定）。
 static IResult JsonError(int status, string message) => Results.Json(new { error = message }, statusCode: status);
+
+// SDK の旧 DLL でもコンパイルできるよう、固定の安全な画像例外だけを名前とアセンブリで識別する。
+// PAO 2026-11-07：届いたデータの復号失敗は、欄名を知らせて帳票全体を止める。
+static string? ImageDecodeFailureMessage(Exception exception)
+{
+    var cause = exception.GetBaseException();
+    var type = cause.GetType();
+    return type.FullName == "Pao.Reports.Maui.Engine.Rendering.ReportImageFormatException"
+        && type.Assembly.GetName().Name == "Pao.Reports.Maui.Engine" ? cause.Message : null;
+}
 
 static bool IsSupportedPrintDataContentType(string? value)
 {
@@ -317,6 +362,10 @@ async Task<IResult> WithGenerationSlotAsync(HttpContext context, SemaphoreSlim s
     {
         // 生成の時間切れは 4 つのサーバーで同じ 503（以前の .NET は 504）。
         return JsonError(StatusCodes.Status503ServiceUnavailable, "帳票の生成が時間内に終わりませんでした。");
+    }
+    catch (Exception exception) when (ImageDecodeFailureMessage(exception) is not null)
+    {
+        return JsonError(StatusCodes.Status400BadRequest, ImageDecodeFailureMessage(exception)!);
     }
     catch
     {
@@ -399,4 +448,29 @@ internal static class NativeDemoCatalog
 
     public static bool TryGet(string id, out NativeDemoSample sample) => ById.TryGetValue(id, out sample!);
     public static bool TryGetLegacy(string id, out NativeDemoSample sample) => LegacyById.TryGetValue(id, out sample!);
+}
+
+/// <summary>
+/// 413 を返す前に、まだ届いていない本文を読み捨てる（上限：Kestrel の MaxRequestBodySize、時間：本文の時間切れと同じ）。
+/// 本文を読まずに答えて接続を閉じると、前に置いた Apache（mod_proxy）が本文を送り終わる前に切られ、利用者には 413 でなく 502 が返った
+/// （11/11 の公開デモ、Native の .NET。Go・Rust・Node は読み切ってから 413 を返していた）。
+/// </summary>
+internal sealed class DrainBodyThenResult(IResult inner, long limit, TimeSpan timeout) : IResult
+{
+    public async Task ExecuteAsync(HttpContext context)
+    {
+        try
+        {
+            using var deadline = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted);
+            deadline.CancelAfter(timeout);
+            var buffer = new byte[64 * 1024];
+            long total = 0;
+            int read;
+            while (total <= limit && (read = await context.Request.Body.ReadAsync(buffer.AsMemory(), deadline.Token)) > 0)
+                total += read;
+        }
+        catch (Exception exception) when (exception is OperationCanceledException or IOException or Microsoft.AspNetCore.Http.BadHttpRequestException)
+        { /* 読み捨てられなかった時は、そのまま 413 を返す（Kestrel が接続を閉じる） */ }
+        await inner.ExecuteAsync(context);
+    }
 }

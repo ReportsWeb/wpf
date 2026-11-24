@@ -6,7 +6,7 @@ ASP.NET CoreがSQLiteから帳票データを作り、Reports.webの.NETネイ�
 
 ## 準備と開き方
 
-Windows、.NET 10 SDK、Visual Studioの「ASP.NETとWeb開発」が必要です。このリポジトリを `git clone` し、`Pao.Reports.Wpf.WebPreview.csproj`をVisual Studioで開きます。VS CodeやCursorでは、このREADMEがあるフォルダーを開きます。Dockerと外部DBは不要です。
+Windows、.NET 10 SDK、Visual Studioの「ASP.NETとWeb開発」が必要です。正式ZIPを完全に展開し、`Pao.Reports.Wpf.WebPreview.csproj`をVisual Studioで開きます。VS CodeやCursorでは、このREADMEがあるフォルダーを開きます。Dockerと外部DBは不要です。
 
 ## サーバーを起動してからURLを開く
 
